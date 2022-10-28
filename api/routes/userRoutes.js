@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const { findUser, saveUser } = require('../../db/db');
 
 router.post('/', (req,res) => {
+    findUser({ 
+        firstName: req.body.firstName, 
+        lastName: req.body.lastName,
+        email: req.body.email
+    }) 
     res.status(201).json({ message: 'POST' })
 });
 
