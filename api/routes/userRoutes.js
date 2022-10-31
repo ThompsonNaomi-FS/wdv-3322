@@ -46,8 +46,7 @@ router.get('/profile/:id', (req, res) => {
 
     findUser(id)
     .then(result => {
-        res.status(201).json({ message: 'GET by Id', id:id });
-        console.log(result);
+        res.status(201).json({ message: `Profile belonging to user with ID #${result}.`});
     })
 });
 
