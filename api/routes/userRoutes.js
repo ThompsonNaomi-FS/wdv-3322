@@ -37,27 +37,13 @@ router.post('/login', (req, res) => {
     res.status(201).json({ message: 'LOGIN' });
 });
 
-router.get('/', (req, res) => {
-    res.status(201).json({ message: 'GET' });
-});
-
-router.get('/profile/:id', (req, res) => {
+router.get('/profile', (req, res) => {
     const id = req.params.id;
 
     findUser(id)
     .then(result => {
-        res.status(201).json({ message: `Profile belonging to user with ID #${result}.`});
+        res.status(201).json({ message: 'PROFILE'});
     })
-});
-
-router.patch('/:id', (req, res) => {
-    const id = req.params.id;
-    res.status(201).json({ message: 'PATCH by Id', id:id });
-});
-
-router.delete('/:id', (req, res) => {
-    const id = req.params.id;
-    res.status(201).json({ message: 'DELETE by Id', id:id });
 });
 
 module.exports = router;

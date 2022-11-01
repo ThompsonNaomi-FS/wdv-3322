@@ -1,16 +1,4 @@
-const users = [
-    {
-    _id: '23',
-    firstName: 'Naomi',
-    lastName: 'Thompson',
-    address: '255 N 5th St',
-    city: 'Ulysses',
-    state: 'NE',
-    zip: '68669',
-    email: 'nameowmi@outlook.com',
-    password: 'password'
-    }
-];
+const users = [];
 
 const findUser = async (data) => {
     return data;
