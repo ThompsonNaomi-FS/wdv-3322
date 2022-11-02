@@ -1,4 +1,5 @@
 const express = require('express');
+const User = require('../model/user');
 const { default: mongoose } = require("mongoose");
 const router = express.Router();
 const { findUser, saveUser } = require('../../db/db');
@@ -8,47 +9,39 @@ const user = {};
 
 router.post('/signup', (req,res) => {
     // findUser by email address { email: email }
+    findUser({email: req.body.email})
     // if user exists return 409 (conflict) with message about user existing
-    // else encrypt the password
-    // create a new user object with the hashed password as the new password
-    // saveUser (user.save(user))
-
-    bcrypt.hash(req.body.password, 10, (err, hash) => {
-        if(err){
-            res.status(500).json({ message: err.message });
+    .then(result => {
+        if(result){
+            res.status(409).json({
+                message: "That email address is already in use! Please try logging in."
+            });
+        // else encrypt the password
         } else {
-            user.password = hash;
-            res.status(200).json({ password: hash });
+            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                if(err){
+                    res.status(500).json({ message: err.message });
+                } else {
+                    user.password = hash;
+                    res.status(200).json({ message: `User with email of ${req.body.email} created successfully!` });
+        // create a new user object with the hashed password as the new password
+        // saveUser (user.save(user))
+                    const newUser = new User({
+                        _id: mongoose.Types.ObjectId(),
+                        firstName: req.body.firstName, 
+                        lastName: req.body.lastName,
+                        address: req.body.address,
+                        city: req.body.city,
+                        state: req.body.state,
+                        zip: req.body.zip,
+                        email: req.body.email,
+                        password: hash
+                    })
+                    saveUser(newUser)
+                }
+            });
         }
-    });
-
-    // saveUser({ 
-    //     _id: mongoose.Types.ObjectId(),
-    //     firstName: req.body.firstName, 
-    //     lastName: req.body.lastName,
-    //     address: req.body.address,
-    //     city: req.body.city,
-    //     state: req.body.state,
-    //     zip: req.body.zip,
-    //     email: req.body.email,
-    //     password: req.body.password
-    // })
-    // .then(result => {
-    //     res.status(200).json({
-    //         message: "User Saved",
-    //         user: {
-    //             "ID": result._id,
-    //             "First Name": result.firstName,
-    //             "Last Name": result.lastName,
-    //             "Address": result.address,
-    //             "City": result.city,
-    //             "State": result.state,
-    //             "Zip": result.zip,
-    //             "Email": result.email,
-    //             "Password": result.password
-    //         }
-    //     })
-    // })
+    })
 });
 
 router.post('/login', (req, res) => {
