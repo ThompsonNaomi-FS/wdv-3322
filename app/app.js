@@ -3,7 +3,6 @@ const app = express();
 const cors = require('cors');
 const userRoute = require('../api/routes/userRoutes');
 
-
 // middleware for routers first (use)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
