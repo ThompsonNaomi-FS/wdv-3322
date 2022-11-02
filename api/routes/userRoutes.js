@@ -7,6 +7,12 @@ const bcrypt = require('bcrypt');
 const user = {};
 
 router.post('/signup', (req,res) => {
+    // findUser by email address { email: email }
+    // if user exists return 409 (conflict) with message about user existing
+    // else encrypt the password
+    // create a new user object with the hashed password as the new password
+    // saveUser (user.save(user))
+
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         if(err){
             res.status(500).json({ message: err.message });
@@ -46,6 +52,14 @@ router.post('/signup', (req,res) => {
 });
 
 router.post('/login', (req, res) => {
+    // findUser
+    // if user not found then return 401 (not authorized) with message saying authorization failed
+    // else compare passwords
+    // test for error in side callback function
+    // test the result (true or false)
+    // return message authorization successful
+    // return name if you want
+
     bcrypt.compare(req.body.password, user.password, (err, result) => {
         if(err) return res.status(501).json({ message: err.message });
         if(result){

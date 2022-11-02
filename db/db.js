@@ -1,17 +1,17 @@
-const users = [];
+const user = require('../api/model/user');
 
-const findUser = async (data) => {
-    return data;
-};
+const findUser = async (data) => { await user.findOne(data).exec() };
 
-const saveUser = async (data) => {
-    users.push(data)
+const saveUser = async (user) => {
+    users.push(user)
     console.log('From saveUser:')
     console.log(users)
-    return data;
+    return user;
 };
 
 module.exports = {
+    // connect, 
+    // disconnect,
     findUser,
-    saveUser
+    saveUser,
 };
