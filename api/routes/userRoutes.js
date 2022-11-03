@@ -77,12 +77,29 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/profile', (req, res) => {
-    const id = req.params.id;
+    const email = req.params.email;
 
-    findUser(id)
+    findUser(email)
     .then(result => {
-        res.status(201).json({ message: 'PROFILE'});
+        if(result){
+            res.status(200).json({
+                message: "User Profile",
+                user: {
+                    "ID": result._id,
+                    "First Name": result.firstName,
+                    "Last Name": result.lastName,
+                    "Address": result.address,
+                    "City": result.city,
+                    "State": result.state,
+                    "Zip": result.zip,
+                    "Email": result.email,
+                    "Password": result.password
+                }
+            })
+        } else {
+            res.status(409).json({ message: "Please log in to view your profile." })
+        }
     })
-});
+}); 
 
 module.exports = router;
