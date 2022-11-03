@@ -16,7 +16,7 @@ router.post('/signup', (req,res) => {
             res.status(409).json({
                 message: "That email address is already in use! Please try logging in."
             });
-        // else encrypt the password
+    // else encrypt the password
         } else {
             bcrypt.hash(req.body.password, 10, (err, hash) => {
                 if(err){
@@ -24,8 +24,8 @@ router.post('/signup', (req,res) => {
                 } else {
                     user.password = hash;
                     res.status(200).json({ message: `User with email of ${req.body.email} created successfully!` });
-        // create a new user object with the hashed password as the new password
-        // saveUser (user.save(user))
+    // create a new user object with the hashed password as the new password
+    // saveUser (user.save(user))
                     const newUser = new User({
                         _id: mongoose.Types.ObjectId(),
                         firstName: req.body.firstName, 
@@ -46,29 +46,34 @@ router.post('/signup', (req,res) => {
 
 router.post('/login', (req, res) => {
     // findUser
+    findUser({email: req.body.email})
     // if user not found then return 401 (not authorized) with message saying authorization failed
+    .then(result => {
+        if(!result){
+            res.status(401).json({
+                message: "That email address is not in our system! Please sign up and try again."
+            });
     // else compare passwords
     // test for error in side callback function
     // test the result (true or false)
     // return message authorization successful
-    // return name if you want
-
-    bcrypt.compare(req.body.password, user.password, (err, result) => {
-        if(err) return res.status(501).json({ message: err.message });
-        if(result){
-            res.status(200).json({ 
-                message: "Authorization Successful!",
-                result: result,
-            });
         } else {
-            res.status(401).json({ 
-                message: "Authorization Failed!",
-                result: result,
-        });
+            bcrypt.compare(req.body.password, user.password, (err, result) => {
+                if(err) return res.status(501).json({ message: err.message });
+                if(result){
+                    res.status(200).json({ 
+                        message: "Authorization Successful!",
+                        result: result,
+                    });
+                } else {
+                    res.status(401).json({ 
+                        message: "Authorization Failed!",
+                        result: result,
+                });
+                }
+            });
         }
-    });
-
-    // res.status(201).json({ message: 'LOGIN' });
+    })
 });
 
 router.get('/profile', (req, res) => {
