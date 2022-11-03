@@ -1,29 +1,16 @@
-const users = [
-    {
-    _id: '23',
-    firstName: 'Naomi',
-    lastName: 'Thompson',
-    address: '255 N 5th St',
-    city: 'Ulysses',
-    state: 'NE',
-    zip: '68669',
-    email: 'nameowmi@outlook.com',
-    password: 'password'
-    }
-];
+const user = require('../api/model/user');
 
-const findUser = async (data) => {
-    return data;
+const findUser = async (data) => { 
+    let result = await user.findOne(data).exec()
+    return result;
 };
 
-const saveUser = async (data) => {
-    users.push(data)
-    console.log('From saveUser:')
-    console.log(users)
-    return data;
-};
+const saveUser = async (user) => { await user.save(user) 
+console.log(user)};
 
 module.exports = {
+    // connect, 
+    // disconnect,
     findUser,
-    saveUser
+    saveUser,
 };

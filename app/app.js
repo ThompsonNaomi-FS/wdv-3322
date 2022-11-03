@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const mongoose = require('mongoose');
 const userRoute = require('../api/routes/userRoutes');
-
 
 // middleware for routers first (use)
 app.use(express.json());
@@ -33,7 +33,14 @@ app.use((error, req, res, next) => {
     })
 });
 
-// mongoDB connection goes at the end
+mongoose.connect(process.env.mongoDBURL, (err) => {
+    if (err) {
+        console.error("Error: ", err.message);
+    }
+    else {
+        console.log("MongoDB connection established.");
+    }
+});
 
 
 module.exports = app;
