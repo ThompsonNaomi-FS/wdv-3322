@@ -20,6 +20,7 @@ router.post('/signup', (req,res) => {
                     res.status(500).json({ message: err.message });
                 } else {
                     user.password = hash;
+                    res.status(200).json({ message: `User with email of ${req.body.email} created successfully!` });
                     const newUser = new User({
                         _id: mongoose.Types.ObjectId(),
                         firstName: req.body.firstName, 
@@ -32,7 +33,6 @@ router.post('/signup', (req,res) => {
                         password: hash
                     })
                     saveUser(newUser)
-                    res.status(200).json({ message: `User with email of ${req.body.email} created successfully!` });
                 }
             });
         }
@@ -66,7 +66,27 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/profile', (req, res) => {
-    res.status(409).json({ message: "Please log in to view your profile." })
+    findUser({email: req.body.email})
+    .then(result => {
+        if(result){
+            res.status(200).json({
+                message: "User Profile",
+                user: {
+                    "ID": result._id,
+                    "First Name": result.firstName,
+                    "Last Name": result.lastName,
+                    "Address": result.address,
+                    "City": result.city,
+                    "State": result.state,
+                    "Zip": result.zip,
+                    "Email": result.email,
+                    "Password": result.password
+                }
+            })
+        } else {
+            res.status(409).json({ message: "Please log in to view your profile." })
+        }
+    })
 }); 
 
 module.exports = router;
