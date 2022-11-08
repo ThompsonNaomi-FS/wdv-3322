@@ -1,24 +1,58 @@
-// bd functions (connect, disconnect, findUser, saveUser)
-// User model
-// mongoose
+const { connect, disconnect, findUser, saveUser } =  require('./__mocks__/db');
+// const { findUser, saveUser } = require('../db/db');
+const User = require('../api/model/user');
+const mongoose = require('mongoose');
+
 
 beforeEach(async () => {
- // call connect
+    connect();
 });
 
-describe( "", () => {
-    resizeTo("find user", () => {
-        // create user
-        // saveUser(user)
-        //expects - fname, lname
+describe( "Testing creating/saving a user and finding a user", () => {
+    test("save user", () => {
+        const user = new User({
+            _id: mongoose.Types.ObjectId(),
+            firstName: "Naomi", 
+            lastName: "Thompson",
+            address: "255 N 5th St",
+            city: "Ulysses",
+            state: "NE",
+            zip: "68669",
+            email: "nameowmi@outlook.com",
+            password: "password"
+        });
+
+        saveUser(user);
+
+        expect(user).toEqual(expect.objectContaining({
+            firstName: "Naomi",
+            lastName: "Thompson",
+            address: "255 N 5th St",
+            city: "Ulysses",
+            state: "NE",
+            zip: 68669,
+            email: "nameowmi@outlook.com",
+            password: "password"
+        }));
+        // expect(response.status).toEqual(200);
     });
 
     test("find user", () => {
-        // get user from findUser({obj})
-        // expect - user fname, lname
+        const result = findUser({email: "nameowmi@outlook.com"});
+        expect(result).toEqual(expect.objectContaining({
+            firstName: "Naomi",
+            lastName: "Thompson",
+            address: "255 N 5th St",
+            city: "Ulysses",
+            state: "NE",
+            zip: 68669,
+            email: "nameowmi@outlook.com",
+            password: "password"
+        }));
+        // expect(response.status).toEqual(200);
     });
 });
 
 afterEach(async () => {
-    // call disconnect
+    disconnect();
 });
